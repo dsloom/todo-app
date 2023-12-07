@@ -1,9 +1,7 @@
-clean
-homework
-thendi
-shakkeela
-meera
+drawing
+do the homework
+speak
 clean the code
 clean
-close
+close the door
 run
