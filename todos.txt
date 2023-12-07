@@ -4,3 +4,6 @@ thendi
 shakkeela
 meera
 clean the code
+clean
+close
+run
