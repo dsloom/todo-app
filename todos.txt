@@ -1,7 +1,4 @@
-drawing
-do the homework
-speak
 clean the code
-clean
 close the door
-run
+do the homework
+rub the board

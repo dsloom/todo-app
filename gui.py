@@ -10,10 +10,15 @@ add_button = sg.Button("Add")
 listbox = sg.Listbox(values=functions.get_todos(), key="todos",
                      enable_events=True, size=[45, 10])
 edit_button = sg.Button("Edit")
+complete_button = sg.Button("Complete")
+exit_button =sg.Button("Exit")
 
-
-window = sg.Window("My To-Do App",layout=[[label], [input_box, add_button],
-                    [listbox, edit_button]], font=("Helvetica", 20))
+window = sg.Window("My To-Do App",
+                   layout=[[label],
+                    [input_box, add_button],
+                    [listbox, edit_button,complete_button],
+                           [exit_button]],
+                   font=("Helvetica", 20))
 
 while True:
 
@@ -26,11 +31,12 @@ while True:
             new_todo = values["todo"] + "\n"
             todos.append(new_todo)
             functions.write_todos(todos)
+            window["todos"].update(todos)
         case "Edit":
             todos = functions.get_todos()
             todo_to_edit = values["todos"][0]
             index = todos.index(todo_to_edit)
-            new_todo = values["todo"] + "\n"
+            new_todo = values["todo"]+ "\n"
             todos[index] = new_todo
             functions.write_todos(todos)
 #for real time change of items in the list
@@ -38,6 +44,16 @@ while True:
 #whenever we select someting we have to see it on input box.
         case "todos":
             window["todo"].update(value=values["todos"][0])
+        case "Complete":
+            todos = functions.get_todos()
+            todo_to_remove = values["todos"][0]
+            todos.remove(todo_to_remove)
+            functions.write_todos(todos)
+            window["todos"].update(todos)
+#to update input window
+            window["todo"].update(value="")
+        case "Exit":
+            break
         case sg.WINDOW_CLOSED:
             break
 window.close()
