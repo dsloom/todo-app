@@ -1,9 +1,14 @@
 import functions
 import PySimpleGUI as sg
+
+import time
 """we have to create window, textbox, a label
  button
 windows is a type (like list)
 """
+sg.theme("Black")
+
+clock = sg.Text("", key="time")
 label = sg.Text("Type in a to do")
 input_box = sg.InputText(tooltip="Enter todo", key="todo")
 add_button = sg.Button("Add")
@@ -14,7 +19,8 @@ complete_button = sg.Button("Complete")
 exit_button =sg.Button("Exit")
 
 window = sg.Window("My To-Do App",
-                   layout=[[label],
+                   layout=[[clock],
+                    [label],
                     [input_box, add_button],
                     [listbox, edit_button,complete_button],
                            [exit_button]],
@@ -22,7 +28,8 @@ window = sg.Window("My To-Do App",
 
 while True:
 
-    event, values = window.read()
+    event, values = window.read(timeout=200)
+    window["time"].update(time.strftime("%b %d , %Y %H:%M:%S"))
     print(event)
     print(values)
     match event :
@@ -33,25 +40,35 @@ while True:
             functions.write_todos(todos)
             window["todos"].update(todos)
         case "Edit":
-            todos = functions.get_todos()
-            todo_to_edit = values["todos"][0]
-            index = todos.index(todo_to_edit)
-            new_todo = values["todo"]+ "\n"
-            todos[index] = new_todo
-            functions.write_todos(todos)
-#for real time change of items in the list
-            window["todos"].update(todos)
+            try:
+                todos = functions.get_todos()
+
+                todo_to_edit = values["todos"][0]
+                index = todos.index(todo_to_edit)
+                new_todo = values["todo"] + "\n"
+                todos[index] = new_todo
+                functions.write_todos(todos)
+# for real time change of items in the list
+                window["todos"].update(todos)
+            except IndexError:
+                print("Please select an Item first")
+
+
 #whenever we select someting we have to see it on input box.
         case "todos":
             window["todo"].update(value=values["todos"][0])
         case "Complete":
-            todos = functions.get_todos()
-            todo_to_remove = values["todos"][0]
-            todos.remove(todo_to_remove)
-            functions.write_todos(todos)
-            window["todos"].update(todos)
-#to update input window
-            window["todo"].update(value="")
+            try:
+                todos = functions.get_todos()
+                todo_to_remove = values["todos"][0]
+                todos.remove(todo_to_remove)
+                functions.write_todos(todos)
+                window["todos"].update(todos)
+# to update input window
+                window["todo"].update(value="")
+            except IndexError:
+                print("Please select an Item first")
+
         case "Exit":
             break
         case sg.WINDOW_CLOSED:
